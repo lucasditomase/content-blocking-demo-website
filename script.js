@@ -7,7 +7,7 @@ var translations = {
     ad_leaderboard_title: "Leaderboard Ad — 728x90 (test box)",
     ad_leaderboard_desc: "This is a fake display ad. A content blocker should hide or collapse this box.",
     test_note_title: "What is this page?",
-    test_note_desc: "A plain HTML/CSS/JS news mockup to test Safari content blockers. Colored boxes below simulate ads, cookie banners, popups, social embeds, video ads, network beacons and trackers.",
+    test_note_desc: "A plain HTML/CSS/JS news mockup to test Safari content blockers. Colored boxes below simulate ads, cookie banners, popups, social embeds, video ads, network beacons, ad blocker detection and trackers.",
     btn_show_cookie: "Show cookie banner",
     btn_show_popup: "Show popup",
     btn_show_sticky: "Show sticky ad",
@@ -134,7 +134,24 @@ var translations = {
     video_net_wait: "Checking ad servers…",
     video_net_ok: "Ad servers reachable — ads will play.",
     video_net_blocked: "Ad servers blocked — playing content without ads.",
-    log_ads_skipped: "ads skipped, servers blocked (fake)"
+    log_ads_skipped: "ads skipped, servers blocked (fake)",
+    blocker_label: "Ad blocker detection (test box)",
+    blocker_title: "Ad blocker detection test",
+    blocker_desc: "Loads a well-known advertising script as a probe. If an ad blocker stops it, a paywall notice appears like on real sites.",
+    blocker_checking: "Checking…",
+    blocker_yes: "Ad blocker detected — paywall notice shown.",
+    blocker_no: "No ad blocker detected.",
+    blocker_unknown: "Offline? Results inconclusive.",
+    btn_recheck: "Re-check",
+    paywall_label: "Paywall notice (test box)",
+    paywall_title: "Please disable your ad blocker (test paywall)",
+    paywall_desc: "Real sites show this when the advertising script fails to load. Subscribe or continue with limited access.",
+    paywall_subscribe: "Subscribe (fake)",
+    paywall_continue: "Continue anyway",
+    log_blocker_on: "ad blocker detected (fake)",
+    log_blocker_off: "no ad blocker detected (fake)",
+    log_paywall_sub: "paywall subscribed (fake)",
+    aria_paywall: "Paywall"
   },
   es: {
     masthead_kicker: "Sitio de noticias de prueba para bloqueadores de contenido en Safari",
@@ -142,7 +159,7 @@ var translations = {
     ad_leaderboard_title: "Anuncio superior — 728x90 (caja de prueba)",
     ad_leaderboard_desc: "Este es un anuncio falso. Un bloqueador de contenido debería ocultar o colapsar esta caja.",
     test_note_title: "¿Qué es esta página?",
-    test_note_desc: "Una maqueta sencilla de noticias en HTML/CSS/JS para probar bloqueadores de contenido en Safari. Las cajas de colores simulan anuncios, banners de cookies, popups, embeds sociales, anuncios de video, beacons de red y rastreadores.",
+    test_note_desc: "Una maqueta sencilla de noticias en HTML/CSS/JS para probar bloqueadores de contenido en Safari. Las cajas de colores simulan anuncios, banners de cookies, popups, embeds sociales, anuncios de video, sondas de red, detección de bloqueadores de anuncios y rastreadores.",
     btn_show_cookie: "Mostrar banner de cookies",
     btn_show_popup: "Mostrar popup",
     btn_show_sticky: "Mostrar anuncio fijo",
@@ -172,12 +189,12 @@ var translations = {
     comments_title: "3 comentarios — simula Disqus",
     comments_desc: "Los sistemas de comentarios de terceros suelen cargar scripts de rastreo.",
     tracker_label: "Rastreador (caja de prueba)",
-    tracker_desc: "Simula un píxel de analítica / script de fingerprinting. Mira el registro:",
+    tracker_desc: "Simula un píxel de analítica / script de huella digital. Mira el registro:",
     ad_sidebar_title: "Anuncio lateral — 300x600 (caja de prueba)",
     ad_sidebar_desc: "Anuncio falso tipo rascacielos, típico de la barra lateral.",
     newsletter_label: "Boletín (caja de prueba)",
     newsletter_title: "Suscríbete a nuestro boletín",
-    newsletter_desc: "Simula un formulario de correo / aviso de paywall.",
+    newsletter_desc: "Simula un formulario de correo / aviso de muro de pago.",
     newsletter_btn: "Suscribirse",
     most_read: "Lo más leído",
     mr1: "El concejo aprueba una nueva red de ciclovías",
@@ -253,9 +270,9 @@ var translations = {
     btn_open_window: "Abrir popup de prueba",
     log_popup_opened: "ventana popup abierta (falso)",
     log_popup_blocked: "ventana popup bloqueada",
-    beacon_label: "Beacons de red (caja de prueba)",
+    beacon_label: "Sondas de red (caja de prueba)",
     beacon_title: "Peticiones de terceros para reglas basadas en URL",
-    beacon_desc: "Estas imágenes y scripts apuntan a hosts bloqueados por reglas de red. Compara los estados con Safari Web Inspector → Network.",
+    beacon_desc: "Estas imágenes y scripts apuntan a hosts bloqueados por reglas de red. Compara los estados con el Inspector web de Safari → Red.",
     beacon_loaded: "cargado",
     beacon_blocked: "bloqueado / falló",
     net_checking: "Comprobando red (sonda de control)…",
@@ -263,13 +280,30 @@ var translations = {
     net_offline: "Control inaccesible — ¿sin conexión? Resultados no concluyentes.",
     prefs_net_checking: "Consultando el gestor de consentimiento…",
     prefs_net_ok: "Gestor de consentimiento accesible — la selección se sincronizaría con el proveedor.",
-    prefs_net_blocked: "Gestor de consentimiento bloqueado — la selección queda en este dispositivo (fallback).",
+    prefs_net_blocked: "Gestor de consentimiento bloqueado — la selección queda en este dispositivo (modo alternativo).",
     log_cmp_ok: "gestor de consentimiento accesible (falso)",
     log_cmp_blocked: "gestor de consentimiento bloqueado (falso)",
     video_net_wait: "Consultando servidores de anuncios…",
     video_net_ok: "Servidores de anuncios accesibles — se mostrarán anuncios.",
     video_net_blocked: "Servidores de anuncios bloqueados — reproduciendo sin anuncios.",
-    log_ads_skipped: "anuncios omitidos, servidores bloqueados (falso)"
+    log_ads_skipped: "anuncios omitidos, servidores bloqueados (falso)",
+    blocker_label: "Detección de bloqueadores de anuncios (caja de prueba)",
+    blocker_title: "Prueba de detección de bloqueadores de anuncios",
+    blocker_desc: "Carga un conocido script de publicidad como sonda. Si un bloqueador de anuncios lo frena, aparece un aviso de muro de pago como en sitios reales.",
+    blocker_checking: "Comprobando…",
+    blocker_yes: "Bloqueador de anuncios detectado — mostrando aviso de muro de pago.",
+    blocker_no: "Sin bloqueador de anuncios detectado.",
+    blocker_unknown: "¿Sin conexión? Resultados no concluyentes.",
+    btn_recheck: "Reintentar",
+    paywall_label: "Aviso de muro de pago (caja de prueba)",
+    paywall_title: "Desactiva tu bloqueador de anuncios (muro de pago de prueba)",
+    paywall_desc: "Los sitios reales muestran esto cuando el script de publicidad no carga. Suscríbete o continúa con acceso limitado.",
+    paywall_subscribe: "Suscribirse (falso)",
+    paywall_continue: "Continuar igual",
+    log_blocker_on: "bloqueador de anuncios detectado (falso)",
+    log_blocker_off: "sin bloqueador de anuncios detectado (falso)",
+    log_paywall_sub: "suscripción al muro de pago (falso)",
+    aria_paywall: "Muro de pago"
   }
 };
 
@@ -299,6 +333,7 @@ function setLang(lang) {
   renderArticle();
   renderBeacons();
   setPrefsNet(prefsNetState);
+  setBlocker(blockerState);
   setNetStatus();
   stackSticky();
   updateTrackerLog("lang: " + lang);
@@ -824,6 +859,69 @@ function fireBeacons() {
   });
 }
 
+// Blocker detection via a well-known advertising script used as a probe. If
+// the <script> load is stopped, a blocker is assumed and a paywall notice
+// appears, like on real sites. The probe URL is intentionally the canonical
+// one, without extras.
+var PROBE_SCRIPT_URL = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+var blockerState = "checking";
+
+function setBlocker(state) {
+  blockerState = state;
+  var el = document.getElementById("blocker-status");
+  if (!el) return;
+  var t = translations[currentLang];
+  if (state === "yes") el.textContent = t.blocker_yes;
+  else if (state === "no") el.textContent = t.blocker_no;
+  else if (state === "unknown") el.textContent = t.blocker_unknown;
+  else el.textContent = t.blocker_checking;
+}
+
+function runBlockerCheck() {
+  setBlocker("checking");
+  // Control first: without network, a probe failure means nothing.
+  probeURL(NET_CONTROL_URL).then(function (cstate) {
+    netControl = cstate;
+    setNetStatus();
+    var s = document.createElement("script");
+    var done = false;
+    function finish(blocked) {
+      if (done) return;
+      done = true;
+      if (s.parentNode) s.parentNode.removeChild(s);
+      var paywall = document.getElementById("paywall-overlay");
+      if (!blocked) {
+        setBlocker("no");
+        paywall.hidden = true;
+        updateTrackerLog(translations[currentLang].log_blocker_off);
+      } else if (netControl === "blocked") {
+        setBlocker("unknown");
+        paywall.hidden = true;
+      } else {
+        setBlocker("yes");
+        paywall.hidden = false;
+        updateTrackerLog(translations[currentLang].log_blocker_on);
+      }
+    }
+    s.onload = function () { finish(false); };
+    s.onerror = function () { finish(true); };
+    s.src = PROBE_SCRIPT_URL;
+    document.head.appendChild(s);
+    setTimeout(function () { finish(true); }, 8000);
+  });
+}
+
+document.getElementById("btn-recheck").addEventListener("click", runBlockerCheck);
+
+document.getElementById("btn-paywall-subscribe").addEventListener("click", function () {
+  document.getElementById("paywall-overlay").hidden = true;
+  updateTrackerLog(translations[currentLang].log_paywall_sub);
+});
+
+document.getElementById("btn-paywall-continue").addEventListener("click", function () {
+  document.getElementById("paywall-overlay").hidden = true;
+});
+
 // Fake tracker heartbeat, so blocking its JS is observable.
 setInterval(function () {
   updateTrackerLog(translations[currentLang].log_heartbeat + location.pathname + translations[currentLang].log_fake);
@@ -835,8 +933,5 @@ setLang(detectLang());
 // The big preferences dialog shows on its own, independently of the small banner.
 openPrefs();
 fireBeacons();
-probeURL(NET_CONTROL_URL).then(function (state) {
-  netControl = state;
-  setNetStatus();
-});
+runBlockerCheck();
 updateTrackerLog(translations[currentLang].log_pageview + " /" + currentArticle);

@@ -162,6 +162,14 @@
           <p id="net-status" class="net-status" data-i18n="net_checking">Checking network (control probe)…</p>
           <ul id="beacon-list"></ul>
         </div>
+        <!-- BLOCKER DETECTION (test element) -->
+        <div id="blocker-box" class="blocker-box" data-test="blocker-detection">
+          <span class="blocker-label" data-i18n="blocker_label">Ad blocker detection (test box)</span>
+          <p><strong data-i18n="blocker_title">Ad blocker detection test</strong></p>
+          <p data-i18n="blocker_desc">Loads a well-known advertising script as a probe. If an ad blocker stops it, a paywall notice appears like on real sites.</p>
+          <p id="blocker-status" class="net-status" data-i18n="blocker_checking">Checking…</p>
+          <button id="btn-recheck" type="button" data-i18n="btn_recheck">Re-check</button>
+        </div>
       </article>
 
       <aside class="sidebar">
@@ -253,6 +261,19 @@
         <button id="btn-prefs-accept-all" type="button" data-i18n="pref_accept_all">Accept all</button>
         <button id="btn-prefs-reject-all" type="button" data-i18n="pref_reject_all">Reject all</button>
         <button id="btn-prefs-save" type="button" data-i18n="pref_save">Save choices</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYWALL NOTICE (test element, shown when the probe is stopped) -->
+  <div id="paywall-overlay" class="popup-overlay" hidden>
+    <div class="paywall-box" role="dialog" aria-label="Paywall" data-i18n-aria-label="aria_paywall">
+      <span class="paywall-label" data-i18n="paywall_label">Paywall notice (test box)</span>
+      <p><strong data-i18n="paywall_title">Please disable your ad blocker (test paywall)</strong></p>
+      <p data-i18n="paywall_desc">Real sites show this when the advertising script fails to load. Subscribe or continue with limited access.</p>
+      <div class="prefs-actions">
+        <button id="btn-paywall-subscribe" type="button" data-i18n="paywall_subscribe">Subscribe (fake)</button>
+        <button id="btn-paywall-continue" type="button" data-i18n="paywall_continue">Continue anyway</button>
       </div>
     </div>
   </div>

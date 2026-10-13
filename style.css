@@ -308,6 +308,41 @@ article {
 
 .net-status { font-size: 13px; font-style: italic; }
 
+/* Blocker detection box and paywall notice */
+
+.blocker-box {
+  background: #f0fdfa;
+  border: 2px solid #0f766e;
+  padding: 16px;
+  margin: 16px 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+.blocker-label, .paywall-label {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  padding: 2px 8px;
+  margin-bottom: 8px;
+}
+
+.blocker-label { color: #115e59; }
+.paywall-label { color: #991b1b; }
+
+#paywall-overlay { z-index: 300; }
+
+.paywall-box {
+  background: #fff;
+  border: 3px solid #b91c1c;
+  max-width: 420px;
+  padding: 24px;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 .newsletter-box {
   background: #fef9c3;
   border: 2px solid #a16207;
