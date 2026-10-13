@@ -84,6 +84,14 @@ button:hover { background: #eee; }
 
 .site-nav a { color: #fff; }
 
+.site-nav a.is-active {
+  background: #fff;
+  color: #111;
+  text-decoration: none;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
 /* Page layout */
 
 .page {

@@ -45,9 +45,9 @@ var translations = {
     newsletter_desc: "Simulates an email capture form / paywall prompt.",
     newsletter_btn: "Subscribe",
     most_read: "Most read",
-    mr1: "Lorem ipsum dolor sit amet",
-    mr2: "Consectetur adipiscing elit",
-    mr3: "Sed do eiusmod tempor",
+    mr1: "City Council Approves New Bike Lane Network",
+    mr2: "New Browser Update Promises Faster Page Loads",
+    mr3: "Local Team Wins Championship in Overtime",
     footer: "The Daily Test — plain demo page for content-blocker testing. No real ads or tracking.",
     cookie_title: "We use cookies (test banner)",
     cookie_desc: "This is a fake cookie-consent notice. Real ones ask permission for analytics and advertising cookies. A blocker may hide this automatically.",
@@ -160,9 +160,9 @@ var translations = {
     newsletter_desc: "Simula un formulario de correo / aviso de paywall.",
     newsletter_btn: "Suscribirse",
     most_read: "Lo más leído",
-    mr1: "Lorem ipsum dolor sit amet",
-    mr2: "Consectetur adipiscing elit",
-    mr3: "Sed do eiusmod tempor",
+    mr1: "El concejo aprueba una nueva red de ciclovías",
+    mr2: "Una actualización del navegador promete cargas más rápidas",
+    mr3: "El equipo local gana el campeonato en tiempo extra",
     footer: "The Daily Test — página sencilla para probar bloqueadores de contenido. Sin anuncios ni rastreo reales.",
     cookie_title: "Usamos cookies (banner de prueba)",
     cookie_desc: "Este es un aviso falso de consentimiento de cookies. Los reales piden permiso para cookies de analítica y publicidad. Un bloqueador puede ocultarlo automáticamente.",
@@ -256,6 +256,7 @@ function setLang(lang) {
   document.getElementById("lang-en").classList.toggle("is-active", lang === "en");
   document.getElementById("lang-es").classList.toggle("is-active", lang === "es");
   vidRender();
+  renderArticle();
   updateTrackerLog("lang: " + lang);
 }
 
@@ -528,12 +529,101 @@ setInterval(function () {
 
 vidRender();
 
+// Fake articles for the nav and Most-read links. Bodies reuse the same
+// lorem ipsum filler; only headlines and bylines change per story.
+var articles = {
+  home: {
+    title: {
+      en: "Local Developer Builds Tiny Website to Test Content Blockers",
+      es: "Un desarrollador crea un sitio diminuto para probar bloqueadores de contenido"
+    },
+    byline: {
+      en: "By Jane Reporter — October 13, 2026 — 4 min read",
+      es: "Por Jane Reporter — 13 de octubre de 2026 — 4 min de lectura"
+    }
+  },
+  world: {
+    title: {
+      en: "City Council Approves New Bike Lane Network",
+      es: "El concejo aprueba una nueva red de ciclovías"
+    },
+    byline: {
+      en: "By Marco Diaz — October 12, 2026 — 3 min read",
+      es: "Por Marco Díaz — 12 de octubre de 2026 — 3 min de lectura"
+    }
+  },
+  tech: {
+    title: {
+      en: "New Browser Update Promises Faster Page Loads",
+      es: "Una actualización del navegador promete cargas más rápidas"
+    },
+    byline: {
+      en: "By Tech Desk — October 11, 2026 — 5 min read",
+      es: "Por Redacción Tech — 11 de octubre de 2026 — 5 min de lectura"
+    }
+  },
+  sports: {
+    title: {
+      en: "Local Team Wins Championship in Overtime",
+      es: "El equipo local gana el campeonato en tiempo extra"
+    },
+    byline: {
+      en: "By Sam Coach — October 10, 2026 — 2 min read",
+      es: "Por Sam Coach — 10 de octubre de 2026 — 2 min de lectura"
+    }
+  },
+  culture: {
+    title: {
+      en: "Museum Opens Free Weekend Exhibition",
+      es: "El museo abre una exhibición gratuita el fin de semana"
+    },
+    byline: {
+      en: "By Ana Ruiz — October 9, 2026 — 4 min read",
+      es: "Por Ana Ruiz — 9 de octubre de 2026 — 4 min de lectura"
+    }
+  }
+};
+
+var currentArticle = "home";
+
+function renderArticle() {
+  var a = articles[currentArticle] || articles.home;
+  document.getElementById("story-title").textContent = a.title[currentLang];
+  document.getElementById("story-byline").textContent = a.byline[currentLang];
+  document.title = translations[currentLang].page_title + " — " + a.title[currentLang];
+  var links = document.querySelectorAll("[data-article]");
+  for (var i = 0; i < links.length; i++) {
+    var active = links[i].getAttribute("data-article") === currentArticle;
+    links[i].classList.toggle("is-active", active);
+    if (active) {
+      links[i].setAttribute("aria-current", "page");
+    } else {
+      links[i].removeAttribute("aria-current");
+    }
+  }
+}
+
+function loadArticle(id, fromHash) {
+  if (!articles[id]) id = "home";
+  currentArticle = id;
+  renderArticle();
+  updateTrackerLog(translations[currentLang].log_pageview + " /" + id);
+  if (!fromHash) location.hash = "#/" + id;
+  window.scrollTo(0, 0);
+}
+
+window.addEventListener("hashchange", function () {
+  loadArticle(location.hash.replace("#/", ""), true);
+});
+
 // Fake tracker heartbeat, so blocking its JS is observable.
 setInterval(function () {
   updateTrackerLog(translations[currentLang].log_heartbeat + location.pathname + translations[currentLang].log_fake);
 }, 10000);
 
+var startId = location.hash.replace("#/", "");
+if (articles[startId]) currentArticle = startId;
 setLang(detectLang());
 // The big preferences dialog shows on its own, independently of the small banner.
 openPrefs();
-updateTrackerLog(translations[currentLang].log_pageview);
+updateTrackerLog(translations[currentLang].log_pageview + " /" + currentArticle);
