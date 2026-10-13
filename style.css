@@ -306,6 +306,8 @@ article {
 .beacon-box ul { margin: 8px 0 0; padding-left: 20px; }
 .beacon-box li { margin: 4px 0; }
 
+.net-status { font-size: 13px; font-style: italic; }
+
 .newsletter-box {
   background: #fef9c3;
   border: 2px solid #a16207;

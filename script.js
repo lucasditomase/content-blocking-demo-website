@@ -7,7 +7,7 @@ var translations = {
     ad_leaderboard_title: "Leaderboard Ad — 728x90 (test box)",
     ad_leaderboard_desc: "This is a fake display ad. A content blocker should hide or collapse this box.",
     test_note_title: "What is this page?",
-    test_note_desc: "A plain HTML/CSS/JS news mockup to test Safari content blockers. Colored boxes below simulate ads, cookie banners, popups, social embeds, video ads and trackers.",
+    test_note_desc: "A plain HTML/CSS/JS news mockup to test Safari content blockers. Colored boxes below simulate ads, cookie banners, popups, social embeds, video ads, network beacons and trackers.",
     btn_show_cookie: "Show cookie banner",
     btn_show_popup: "Show popup",
     btn_show_sticky: "Show sticky ad",
@@ -122,7 +122,19 @@ var translations = {
     beacon_title: "Third-party requests for URL-based rules",
     beacon_desc: "These images and scripts point at hosts blocked by network rules. Compare the statuses below with Safari Web Inspector → Network.",
     beacon_loaded: "loaded",
-    beacon_blocked: "blocked / failed"
+    beacon_blocked: "blocked / failed",
+    net_checking: "Checking network (control probe)…",
+    net_online: "Network OK — control reachable, beacon results are meaningful.",
+    net_offline: "Control unreachable — offline? Beacon results inconclusive.",
+    prefs_net_checking: "Checking consent manager…",
+    prefs_net_ok: "Consent manager reachable — choices would sync to the vendor.",
+    prefs_net_blocked: "Consent manager blocked — choices stay on this device (fallback).",
+    log_cmp_ok: "consent manager reachable (fake)",
+    log_cmp_blocked: "consent manager blocked (fake)",
+    video_net_wait: "Checking ad servers…",
+    video_net_ok: "Ad servers reachable — ads will play.",
+    video_net_blocked: "Ad servers blocked — playing content without ads.",
+    log_ads_skipped: "ads skipped, servers blocked (fake)"
   },
   es: {
     masthead_kicker: "Sitio de noticias de prueba para bloqueadores de contenido en Safari",
@@ -130,7 +142,7 @@ var translations = {
     ad_leaderboard_title: "Anuncio superior — 728x90 (caja de prueba)",
     ad_leaderboard_desc: "Este es un anuncio falso. Un bloqueador de contenido debería ocultar o colapsar esta caja.",
     test_note_title: "¿Qué es esta página?",
-    test_note_desc: "Una maqueta sencilla de noticias en HTML/CSS/JS para probar bloqueadores de contenido en Safari. Las cajas de colores simulan anuncios, banners de cookies, popups, embeds sociales, anuncios de video y rastreadores.",
+    test_note_desc: "Una maqueta sencilla de noticias en HTML/CSS/JS para probar bloqueadores de contenido en Safari. Las cajas de colores simulan anuncios, banners de cookies, popups, embeds sociales, anuncios de video, beacons de red y rastreadores.",
     btn_show_cookie: "Mostrar banner de cookies",
     btn_show_popup: "Mostrar popup",
     btn_show_sticky: "Mostrar anuncio fijo",
@@ -245,7 +257,19 @@ var translations = {
     beacon_title: "Peticiones de terceros para reglas basadas en URL",
     beacon_desc: "Estas imágenes y scripts apuntan a hosts bloqueados por reglas de red. Compara los estados con Safari Web Inspector → Network.",
     beacon_loaded: "cargado",
-    beacon_blocked: "bloqueado / falló"
+    beacon_blocked: "bloqueado / falló",
+    net_checking: "Comprobando red (sonda de control)…",
+    net_online: "Red OK — control accesible, los resultados son válidos.",
+    net_offline: "Control inaccesible — ¿sin conexión? Resultados no concluyentes.",
+    prefs_net_checking: "Consultando el gestor de consentimiento…",
+    prefs_net_ok: "Gestor de consentimiento accesible — la selección se sincronizaría con el proveedor.",
+    prefs_net_blocked: "Gestor de consentimiento bloqueado — la selección queda en este dispositivo (fallback).",
+    log_cmp_ok: "gestor de consentimiento accesible (falso)",
+    log_cmp_blocked: "gestor de consentimiento bloqueado (falso)",
+    video_net_wait: "Consultando servidores de anuncios…",
+    video_net_ok: "Servidores de anuncios accesibles — se mostrarán anuncios.",
+    video_net_blocked: "Servidores de anuncios bloqueados — reproduciendo sin anuncios.",
+    log_ads_skipped: "anuncios omitidos, servidores bloqueados (falso)"
   }
 };
 
@@ -274,6 +298,8 @@ function setLang(lang) {
   vidRender();
   renderArticle();
   renderBeacons();
+  setPrefsNet(prefsNetState);
+  setNetStatus();
   stackSticky();
   updateTrackerLog("lang: " + lang);
 }
@@ -345,11 +371,52 @@ document.getElementById("btn-show-cookie").addEventListener("click", function ()
   stackSticky();
 });
 
+// Network probes for block-type rules. Probes use fetch in no-cors mode:
+// success resolves opaque, a blocked load rejects. A neutral control probe
+// tells "offline" apart from "blocked". NOTE: fetch only matches rules with
+// resourceType nil/fetch — script/image rules need element beacons instead.
+var NET_CONTROL_URL = "https://www.example.com/";
+var netControl = "checking";
+
+function probeURL(url) {
+  return fetch(url, { mode: "no-cors", cache: "no-store" }).then(
+    function () { return "loaded"; },
+    function () { return "blocked"; }
+  );
+}
+
+function setNetStatus() {
+  var el = document.getElementById("net-status");
+  if (!el) return;
+  var t = translations[currentLang];
+  if (netControl === "loaded") el.textContent = t.net_online;
+  else if (netControl === "blocked") el.textContent = t.net_offline;
+  else el.textContent = t.net_checking;
+}
+
 // Granular cookie preferences dialog.
 var prefsOverlay = document.getElementById("onetrust-consent-sdk");
+var prefsNetState = "checking";
+
+function setPrefsNet(state) {
+  prefsNetState = state;
+  var el = document.getElementById("prefs-netstatus");
+  if (!el) return;
+  var t = translations[currentLang];
+  if (state === "ok") el.textContent = t.prefs_net_ok;
+  else if (state === "blocked") el.textContent = t.prefs_net_blocked;
+  else el.textContent = t.prefs_net_checking;
+}
 
 function openPrefs() {
   prefsOverlay.hidden = false;
+  setPrefsNet("checking");
+  // cdn.cookielaw.org (OneTrust) is blocked with resourceType nil,
+  // so a fetch probe matches the rule.
+  probeURL("https://cdn.cookielaw.org/consent/test.js").then(function (state) {
+    setPrefsNet(state === "loaded" ? "ok" : "blocked");
+    updateTrackerLog(translations[currentLang][state === "loaded" ? "log_cmp_ok" : "log_cmp_blocked"]);
+  });
 }
 
 function closePrefs(msg) {
@@ -473,6 +540,15 @@ function vidRenderAd() {
 }
 
 function vidStartAd(kind) {
+  // Adaptive behavior: with the ad servers blocked, skip the ad break and
+  // play content directly, like a real player with an unreachable ad server.
+  if (adServersBlocked()) {
+    if (kind === "preroll") vidPrerollDone = true;
+    else vidMidrollDone = true;
+    updateTrackerLog(translations[currentLang].log_ads_skipped);
+    vidRender();
+    return;
+  }
   vidAd = kind;
   vidAdLeft = VID_AD_LEN;
   if (kind === "preroll") {
@@ -556,7 +632,8 @@ setInterval(function () {
   }
   if (!vidOverlayDone && vidTime >= 5) {
     vidOverlayDone = true;
-    vidOverlayEl.hidden = false;
+    // Like the ad breaks, the overlay only shows when servers are reachable.
+    if (!adServersBlocked()) vidOverlayEl.hidden = false;
   }
   vidRender();
 }, 500);
@@ -670,6 +747,34 @@ document.getElementById("btn-open-window").addEventListener("click", function ()
 
 // Network beacons: real third-party requests that URL-based block rules
 // target. Statuses update here; confirm in Safari Web Inspector → Network.
+var AD_BEACON_NAMES = ["googlesyndication.com", "imasdk.googleapis.com"];
+
+function adBeaconStates() {
+  var states = [];
+  for (var i = 0; i < BEACONS.length; i++) {
+    if (AD_BEACON_NAMES.indexOf(BEACONS[i].name) !== -1) states.push(BEACONS[i].state);
+  }
+  return states;
+}
+
+function adServersBlocked() {
+  var states = adBeaconStates();
+  return states.length === AD_BEACON_NAMES.length && states.every(function (s) { return s === "blocked"; });
+}
+
+function updateVideoNet() {
+  var el = document.getElementById("video-netstatus");
+  if (!el) return;
+  var t = translations[currentLang];
+  var states = adBeaconStates();
+  if (adServersBlocked()) {
+    el.textContent = t.video_net_blocked;
+  } else if (states.some(function (s) { return s === "pending"; })) {
+    el.textContent = t.video_net_wait;
+  } else {
+    el.textContent = t.video_net_ok;
+  }
+}
 var BEACONS = [
   { kind: "image", name: "pixel.wp.com", url: "https://pixel.wp.com/g.gif?demo=1", state: "pending" },
   { kind: "script", name: "google-analytics.com", url: "https://www.google-analytics.com/analytics.js", state: "pending" },
@@ -698,6 +803,7 @@ function renderBeacons() {
     li.appendChild(span);
     list.appendChild(li);
   }
+  updateVideoNet();
 }
 
 function fireBeacons() {
@@ -729,4 +835,8 @@ setLang(detectLang());
 // The big preferences dialog shows on its own, independently of the small banner.
 openPrefs();
 fireBeacons();
+probeURL(NET_CONTROL_URL).then(function (state) {
+  netControl = state;
+  setNetStatus();
+});
 updateTrackerLog(translations[currentLang].log_pageview + " /" + currentArticle);

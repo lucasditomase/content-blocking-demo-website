@@ -97,6 +97,7 @@
           <span class="video-label" data-i18n="video_label">Video player (test box)</span>
           <p><strong data-i18n="video_title">Featured video — fake player</strong></p>
           <p data-i18n="video_desc">Simulates preroll, midroll and overlay banner ads.</p>
+          <p id="video-netstatus" class="net-status" data-i18n="video_net_wait">Checking ad servers…</p>
           <div class="video-screen">
             <div class="video-content"><span data-i18n="video_content">Main video content (fake)</span></div>
             <div id="video-preroll" class="video-ad vast-ad vast-preroll ad-slot" data-ad-slot="preroll" hidden>
@@ -158,6 +159,7 @@
           <span class="beacon-label" data-i18n="beacon_label">Network beacons (test box)</span>
           <p><strong data-i18n="beacon_title">Third-party requests for URL-based rules</strong></p>
           <p data-i18n="beacon_desc">These images and scripts point at hosts blocked by network rules. Compare the statuses below with Safari Web Inspector → Network.</p>
+          <p id="net-status" class="net-status" data-i18n="net_checking">Checking network (control probe)…</p>
           <ul id="beacon-list"></ul>
         </div>
       </article>
@@ -230,6 +232,7 @@
       <span class="tracker-label" data-i18n="pref_label">Granular consent (test box)</span>
       <p><strong data-i18n="pref_title">Cookie preferences (test dialog)</strong></p>
       <p data-i18n="pref_desc">Choose which cookies to allow. Necessary cookies are always on.</p>
+      <p id="prefs-netstatus" class="net-status" data-i18n="prefs_net_checking">Checking consent manager…</p>
       <label class="pref-row">
         <input type="checkbox" checked disabled>
         <span><strong data-i18n="pref_necessary">Necessary</strong><br><span data-i18n="pref_necessary_desc">Required for the site to work.</span> <em data-i18n="pref_always">Always on</em></span>
