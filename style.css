@@ -180,7 +180,13 @@ article {
 
 .ad-label { color: #7a5b00; }
 
-.ad-leaderboard { max-width: 1000px; margin: 16px auto; }
+.ad-leaderboard {
+  max-width: 1000px;
+  margin: 16px auto;
+  position: sticky;
+  top: 0;
+  z-index: 80;
+}
 .page .ad-leaderboard { margin: 16px 0; }
 
 .ad-skyscraper { margin-top: 0; min-height: 300px; }
