@@ -81,7 +81,25 @@ var translations = {
     aria_email: "email",
     aria_cookie: "Cookie consent",
     aria_popup: "Popup",
-    aria_close: "Close"
+    aria_close: "Close",
+    btn_show_prefs: "Show cookie preferences",
+    pref_label: "Granular consent (test box)",
+    pref_title: "Cookie preferences (test dialog)",
+    pref_desc: "Choose which cookies to allow. Necessary cookies are always on.",
+    pref_necessary: "Necessary",
+    pref_necessary_desc: "Required for the site to work.",
+    pref_always: "Always on",
+    pref_functional: "Functional",
+    pref_functional_desc: "Remember language and preferences.",
+    pref_analytics: "Analytics",
+    pref_analytics_desc: "Help us measure visits and traffic.",
+    pref_ads: "Advertising",
+    pref_ads_desc: "Used for personalized ads.",
+    pref_accept_all: "Accept all",
+    pref_reject_all: "Reject all",
+    pref_save: "Save choices",
+    log_prefs_saved: "cookie choices saved (fake)",
+    aria_prefs: "Cookie preferences"
   },
   es: {
     masthead_kicker: "Sitio de noticias de prueba para bloqueadores de contenido en Safari",
@@ -163,7 +181,25 @@ var translations = {
     aria_email: "correo electrónico",
     aria_cookie: "Consentimiento de cookies",
     aria_popup: "Ventana emergente",
-    aria_close: "Cerrar"
+    aria_close: "Cerrar",
+    btn_show_prefs: "Mostrar preferencias de cookies",
+    pref_label: "Consentimiento granular (caja de prueba)",
+    pref_title: "Preferencias de cookies (diálogo de prueba)",
+    pref_desc: "Elige qué cookies permitir. Las necesarias siempre están activas.",
+    pref_necessary: "Necesarias",
+    pref_necessary_desc: "Necesarias para que el sitio funcione.",
+    pref_always: "Siempre activas",
+    pref_functional: "Funcionales",
+    pref_functional_desc: "Recuerdan idioma y preferencias.",
+    pref_analytics: "Analítica",
+    pref_analytics_desc: "Ayudan a medir visitas y tráfico.",
+    pref_ads: "Publicidad",
+    pref_ads_desc: "Se usan para anuncios personalizados.",
+    pref_accept_all: "Aceptar todas",
+    pref_reject_all: "Rechazar todas",
+    pref_save: "Guardar selección",
+    log_prefs_saved: "selección de cookies guardada (falso)",
+    aria_prefs: "Preferencias de cookies"
   }
 };
 
@@ -256,6 +292,43 @@ document.getElementById("btn-show-cookie").addEventListener("click", function ()
   cookieBanner.hidden = false;
 });
 
+// Granular cookie preferences dialog.
+var prefsOverlay = document.getElementById("prefs-overlay");
+
+function openPrefs() {
+  prefsOverlay.hidden = false;
+}
+
+function closePrefs(msg) {
+  prefsOverlay.hidden = true;
+  var f = document.getElementById("pref-functional").checked ? 1 : 0;
+  var a = document.getElementById("pref-analytics").checked ? 1 : 0;
+  var d = document.getElementById("pref-ads").checked ? 1 : 0;
+  updateTrackerLog(msg + " (functional=" + f + ", analytics=" + a + ", ads=" + d + ")");
+}
+
+function setAllPrefs(checked) {
+  document.getElementById("pref-functional").checked = checked;
+  document.getElementById("pref-analytics").checked = checked;
+  document.getElementById("pref-ads").checked = checked;
+}
+
+document.getElementById("btn-show-prefs").addEventListener("click", openPrefs);
+
+document.getElementById("btn-prefs-accept-all").addEventListener("click", function () {
+  setAllPrefs(true);
+  closePrefs(translations[currentLang].log_accepted);
+});
+
+document.getElementById("btn-prefs-reject-all").addEventListener("click", function () {
+  setAllPrefs(false);
+  closePrefs(translations[currentLang].log_rejected);
+});
+
+document.getElementById("btn-prefs-save").addEventListener("click", function () {
+  closePrefs(translations[currentLang].log_prefs_saved);
+});
+
 // Popup (auto-show once after 3s, like a real interstitial).
 var popup = document.getElementById("popup-overlay");
 
@@ -291,4 +364,6 @@ setInterval(function () {
 }, 10000);
 
 setLang(detectLang());
+// The big preferences dialog shows on its own, independently of the small banner.
+openPrefs();
 updateTrackerLog(translations[currentLang].log_pageview);

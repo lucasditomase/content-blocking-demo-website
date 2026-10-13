@@ -44,6 +44,7 @@
           <p data-i18n="test_note_desc">A plain HTML/CSS/JS news mockup to test Safari content blockers. Colored boxes below simulate ads, cookie banners, popups, social embeds and trackers.</p>
           <div class="test-controls">
             <button id="btn-show-cookie" type="button" data-i18n="btn_show_cookie">Show cookie banner</button>
+            <button id="btn-show-prefs" type="button" data-i18n="btn_show_prefs">Show cookie preferences</button>
             <button id="btn-show-popup" type="button" data-i18n="btn_show_popup">Show popup</button>
             <button id="btn-show-sticky" type="button" data-i18n="btn_show_sticky">Show sticky ad</button>
           </div>
@@ -183,6 +184,36 @@
       <p><strong data-i18n="popup_title">Wait! Special offer (fake popup)</strong></p>
       <p data-i18n="popup_desc">Simulates a newsletter interstitial or full-screen ad shown after 3 seconds.</p>
       <button id="btn-close-popup" type="button" data-i18n="popup_close">Close</button>
+    </div>
+  </div>
+
+  <!-- GRANULAR COOKIE PREFERENCES (test element) -->
+  <div id="prefs-overlay" class="popup-overlay cookie-prefs-overlay" hidden>
+    <div class="prefs-box cookie-preferences" role="dialog" aria-label="Cookie preferences" data-i18n-aria-label="aria_prefs" data-test="cookie-prefs">
+      <span class="tracker-label" data-i18n="pref_label">Granular consent (test box)</span>
+      <p><strong data-i18n="pref_title">Cookie preferences (test dialog)</strong></p>
+      <p data-i18n="pref_desc">Choose which cookies to allow. Necessary cookies are always on.</p>
+      <label class="pref-row">
+        <input type="checkbox" checked disabled>
+        <span><strong data-i18n="pref_necessary">Necessary</strong><br><span data-i18n="pref_necessary_desc">Required for the site to work.</span> <em data-i18n="pref_always">Always on</em></span>
+      </label>
+      <label class="pref-row">
+        <input type="checkbox" id="pref-functional" checked>
+        <span><strong data-i18n="pref_functional">Functional</strong><br><span data-i18n="pref_functional_desc">Remember language and preferences.</span></span>
+      </label>
+      <label class="pref-row">
+        <input type="checkbox" id="pref-analytics" checked>
+        <span><strong data-i18n="pref_analytics">Analytics</strong><br><span data-i18n="pref_analytics_desc">Help us measure visits and traffic.</span></span>
+      </label>
+      <label class="pref-row">
+        <input type="checkbox" id="pref-ads">
+        <span><strong data-i18n="pref_ads">Advertising</strong><br><span data-i18n="pref_ads_desc">Used for personalized ads.</span></span>
+      </label>
+      <div class="prefs-actions">
+        <button id="btn-prefs-accept-all" type="button" data-i18n="pref_accept_all">Accept all</button>
+        <button id="btn-prefs-reject-all" type="button" data-i18n="pref_reject_all">Reject all</button>
+        <button id="btn-prefs-save" type="button" data-i18n="pref_save">Save choices</button>
+      </div>
     </div>
   </div>
 
