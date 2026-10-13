@@ -114,7 +114,15 @@ var translations = {
     video_skip_in: "Skip in",
     video_ad_ends: "Ad ends in",
     log_preroll: "preroll shown (fake)",
-    log_midroll: "midroll shown (fake)"
+    log_midroll: "midroll shown (fake)",
+    btn_open_window: "Open test popup window",
+    log_popup_opened: "popup window opened (fake)",
+    log_popup_blocked: "popup window blocked",
+    beacon_label: "Network beacons (test box)",
+    beacon_title: "Third-party requests for URL-based rules",
+    beacon_desc: "These images and scripts point at hosts blocked by network rules. Compare the statuses below with Safari Web Inspector → Network.",
+    beacon_loaded: "loaded",
+    beacon_blocked: "blocked / failed"
   },
   es: {
     masthead_kicker: "Sitio de noticias de prueba para bloqueadores de contenido en Safari",
@@ -229,7 +237,15 @@ var translations = {
     video_skip_in: "Omitir en",
     video_ad_ends: "Termina en",
     log_preroll: "preroll mostrado (falso)",
-    log_midroll: "midroll mostrado (falso)"
+    log_midroll: "midroll mostrado (falso)",
+    btn_open_window: "Abrir popup de prueba",
+    log_popup_opened: "ventana popup abierta (falso)",
+    log_popup_blocked: "ventana popup bloqueada",
+    beacon_label: "Beacons de red (caja de prueba)",
+    beacon_title: "Peticiones de terceros para reglas basadas en URL",
+    beacon_desc: "Estas imágenes y scripts apuntan a hosts bloqueados por reglas de red. Compara los estados con Safari Web Inspector → Network.",
+    beacon_loaded: "cargado",
+    beacon_blocked: "bloqueado / falló"
   }
 };
 
@@ -257,6 +273,7 @@ function setLang(lang) {
   document.getElementById("lang-es").classList.toggle("is-active", lang === "es");
   vidRender();
   renderArticle();
+  renderBeacons();
   stackSticky();
   updateTrackerLog("lang: " + lang);
 }
@@ -309,7 +326,7 @@ document.getElementById("lang-es").addEventListener("click", function () {
 });
 
 // Cookie banner.
-var cookieBanner = document.getElementById("cookie-consent-banner");
+var cookieBanner = document.getElementById("cookies-overlay");
 
 document.getElementById("btn-accept-cookies").addEventListener("click", function () {
   cookieBanner.hidden = true;
@@ -329,7 +346,7 @@ document.getElementById("btn-show-cookie").addEventListener("click", function ()
 });
 
 // Granular cookie preferences dialog.
-var prefsOverlay = document.getElementById("prefs-overlay");
+var prefsOverlay = document.getElementById("onetrust-consent-sdk");
 
 function openPrefs() {
   prefsOverlay.hidden = false;
@@ -366,7 +383,7 @@ document.getElementById("btn-prefs-save").addEventListener("click", function () 
 });
 
 // Popup (auto-show once after 3s, like a real interstitial).
-var popup = document.getElementById("popup-overlay");
+var popup = document.getElementById("credential_picker_container");
 
 document.getElementById("btn-close-popup").addEventListener("click", function () {
   popup.hidden = true;
@@ -399,7 +416,7 @@ document.getElementById("btn-show-sticky").addEventListener("click", function ()
 // visible. A fixed CSS offset can't do this: the banner height changes with
 // language and viewport width, leaving a gap or an overlap.
 function stackSticky() {
-  var banner = document.getElementById("cookie-consent-banner");
+  var banner = document.getElementById("cookies-overlay");
   var bar = document.getElementById("ad-sticky-bottom");
   bar.style.bottom = banner.hidden ? "0" : banner.offsetHeight + "px";
 }
@@ -633,6 +650,74 @@ window.addEventListener("hashchange", function () {
   loadArticle(location.hash.replace("#/", ""), true);
 });
 
+// Test window.open popups (FirstParty/ThirdPartyPopupRules block the
+// popup resource type). Must run on user click to pass Safari's own gate.
+document.getElementById("btn-open-window").addEventListener("click", function () {
+  var w = null;
+  try {
+    w = window.open(location.href, "_blank");
+  } catch (e) {
+    w = null;
+  }
+  var opened = false;
+  try {
+    opened = !!w && !w.closed;
+  } catch (e) {
+    opened = false;
+  }
+  updateTrackerLog(translations[currentLang][opened ? "log_popup_opened" : "log_popup_blocked"]);
+});
+
+// Network beacons: real third-party requests that URL-based block rules
+// target. Statuses update here; confirm in Safari Web Inspector → Network.
+var BEACONS = [
+  { kind: "image", name: "pixel.wp.com", url: "https://pixel.wp.com/g.gif?demo=1", state: "pending" },
+  { kind: "script", name: "google-analytics.com", url: "https://www.google-analytics.com/analytics.js", state: "pending" },
+  { kind: "script", name: "googletagmanager.com", url: "https://www.googletagmanager.com/gtm.js?id=GTM-TEST", state: "pending" },
+  { kind: "script", name: "googlesyndication.com", url: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", state: "pending" },
+  { kind: "script", name: "imasdk.googleapis.com", url: "https://imasdk.googleapis.com/js/sdkloader/ima3.js", state: "pending" }
+];
+
+function beaconStatusText(state) {
+  if (state === "loaded") return translations[currentLang].beacon_loaded;
+  if (state === "blocked") return translations[currentLang].beacon_blocked;
+  return "…";
+}
+
+function renderBeacons() {
+  var list = document.getElementById("beacon-list");
+  if (!list) return;
+  list.textContent = "";
+  for (var i = 0; i < BEACONS.length; i++) {
+    var li = document.createElement("li");
+    var code = document.createElement("code");
+    code.textContent = BEACONS[i].kind + " " + BEACONS[i].name;
+    var span = document.createElement("span");
+    span.textContent = ": " + beaconStatusText(BEACONS[i].state);
+    li.appendChild(code);
+    li.appendChild(span);
+    list.appendChild(li);
+  }
+}
+
+function fireBeacons() {
+  renderBeacons();
+  BEACONS.forEach(function (b) {
+    var done = function (state) {
+      if (b.state === "pending") {
+        b.state = state;
+        renderBeacons();
+      }
+    };
+    var el = b.kind === "image" ? new Image() : document.createElement("script");
+    el.onload = function () { done("loaded"); };
+    el.onerror = function () { done("blocked"); };
+    el.src = b.url;
+    if (b.kind === "script") document.head.appendChild(el);
+    setTimeout(function () { done("blocked"); }, 8000);
+  });
+}
+
 // Fake tracker heartbeat, so blocking its JS is observable.
 setInterval(function () {
   updateTrackerLog(translations[currentLang].log_heartbeat + location.pathname + translations[currentLang].log_fake);
@@ -643,4 +728,5 @@ if (articles[startId]) currentArticle = startId;
 setLang(detectLang());
 // The big preferences dialog shows on its own, independently of the small banner.
 openPrefs();
+fireBeacons();
 updateTrackerLog(translations[currentLang].log_pageview + " /" + currentArticle);

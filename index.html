@@ -29,7 +29,7 @@
   </header>
 
   <!-- TOP LEADERBOARD AD (test element) -->
-  <div id="ad-leaderboard-top" class="ad-box ad-leaderboard adsbygoogle" data-test="ad-leaderboard">
+  <div id="ad-leaderboard-top" class="ad-box ad-leaderboard adsbygoogle ad-slot ad-wrapper" data-ad-slot="leaderboard" data-test="ad-leaderboard">
     <span class="ad-label" data-i18n="ad_label">Advertisement</span>
     <p><strong data-i18n="ad_leaderboard_title">Leaderboard Ad — 728x90 (test box)</strong></p>
     <p data-i18n="ad_leaderboard_desc">This is a fake display ad. A content blocker should hide or collapse this box.</p>
@@ -47,6 +47,7 @@
             <button id="btn-show-prefs" type="button" data-i18n="btn_show_prefs">Show cookie preferences</button>
             <button id="btn-show-popup" type="button" data-i18n="btn_show_popup">Show popup</button>
             <button id="btn-show-sticky" type="button" data-i18n="btn_show_sticky">Show sticky ad</button>
+            <button id="btn-open-window" type="button" data-i18n="btn_open_window">Open test popup window</button>
           </div>
         </section>
 
@@ -64,7 +65,7 @@
         <p data-i18n="p3">Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
 
         <!-- IN-ARTICLE AD (test element) -->
-        <div id="ad-inarticle" class="ad-box ad-inarticle adsbygoogle" data-test="ad-inarticle">
+        <div id="ad-inarticle" class="ad-box ad-inarticle adsbygoogle ad ad-text" data-ad-slot="inarticle" data-test="ad-inarticle">
           <span class="ad-label" data-i18n="ad_label">Advertisement</span>
           <p><strong data-i18n="ad_inarticle_title">In-Article Ad (test box)</strong></p>
           <p data-i18n="ad_inarticle_desc">Fake ad placed between paragraphs, like AdSense in-article ads.</p>
@@ -98,11 +99,11 @@
           <p data-i18n="video_desc">Simulates preroll, midroll and overlay banner ads.</p>
           <div class="video-screen">
             <div class="video-content"><span data-i18n="video_content">Main video content (fake)</span></div>
-            <div id="video-preroll" class="video-ad vast-ad vast-preroll" hidden>
+            <div id="video-preroll" class="video-ad vast-ad vast-preroll ad-slot" data-ad-slot="preroll" hidden>
               <span class="ad-label" data-i18n="video_preroll">Preroll Ad (test)</span>
               <button id="btn-skip-preroll" type="button" data-i18n="video_skip" disabled>Skip ad</button>
             </div>
-            <div id="video-midroll" class="video-ad vast-ad vast-midroll" hidden>
+            <div id="video-midroll" class="video-ad vast-ad vast-midroll ad-slot" data-ad-slot="midroll" hidden>
               <span class="ad-label" data-i18n="video_midroll">Midroll Ad (test)</span>
               <span id="midroll-count"></span>
             </div>
@@ -122,7 +123,7 @@
         <p data-i18n="p7">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.</p>
 
         <!-- SPONSORED / TABOOLA (test element) -->
-        <div id="sponsored-grid" class="sponsored-box sponsored-content taboola" data-test="sponsored">
+        <div id="taboola-below-article-thumbnails" class="sponsored-box sponsored-content taboola outbrain trc_related_container" data-test="sponsored">
           <span class="sponsored-label" data-i18n="sponsored_label">Sponsored content (test box)</span>
           <p><strong data-i18n="sponsored_title">You may also like</strong></p>
           <div class="sponsored-grid">
@@ -151,10 +152,18 @@
           <code id="tracker-log" data-i18n="tracker_wait">tracker: waiting…</code>
           <img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="1" height="1" alt="">
         </div>
+
+        <!-- NETWORK BEACONS (test element) -->
+        <div id="beacon-box" class="beacon-box" data-test="network-beacons">
+          <span class="beacon-label" data-i18n="beacon_label">Network beacons (test box)</span>
+          <p><strong data-i18n="beacon_title">Third-party requests for URL-based rules</strong></p>
+          <p data-i18n="beacon_desc">These images and scripts point at hosts blocked by network rules. Compare the statuses below with Safari Web Inspector → Network.</p>
+          <ul id="beacon-list"></ul>
+        </div>
       </article>
 
       <aside class="sidebar">
-        <div id="ad-sidebar" class="ad-box ad-skyscraper adsbygoogle" data-test="ad-sidebar">
+        <div id="ad-sidebar" class="ad-box ad-skyscraper adsbygoogle ad-container ad-slot" data-ad-slot="sidebar" data-test="ad-sidebar">
           <span class="ad-label" data-i18n="ad_label">Advertisement</span>
           <p><strong data-i18n="ad_sidebar_title">Sidebar Ad — 300x600 (test box)</strong></p>
           <p data-i18n="ad_sidebar_desc">Fake skyscraper ad, typical sidebar inventory.</p>
@@ -187,7 +196,7 @@
   </div>
 
   <!-- COOKIE CONSENT (test element) -->
-  <div id="cookie-consent-banner" class="cookie-banner" role="dialog" aria-label="Cookie consent" data-i18n-aria-label="aria_cookie">
+  <div id="cookies-overlay" class="cookie-banner" role="dialog" aria-label="Cookie consent" data-i18n-aria-label="aria_cookie">
     <div>
       <strong data-i18n="cookie_title">We use cookies (test banner)</strong>
       <p data-i18n="cookie_desc">This is a fake cookie-consent notice. Real ones ask permission for analytics and advertising cookies. A blocker may hide this automatically.</p>
@@ -199,14 +208,14 @@
   </div>
 
   <!-- STICKY BOTTOM AD (test element) -->
-  <div id="ad-sticky-bottom" class="ad-box ad-sticky adsbygoogle" data-test="ad-sticky">
+  <div id="ad-sticky-bottom" class="ad-box ad-sticky adsbygoogle ad-slot" data-mini-ad-unit data-test="ad-sticky">
     <span class="ad-label" data-i18n="ad_label">Advertisement</span>
     <span data-i18n="ad_sticky_desc">Sticky bottom ad (test box)</span>
     <button id="btn-close-sticky" type="button" aria-label="Close" data-i18n-aria-label="aria_close">✕</button>
   </div>
 
   <!-- POPUP / INTERSTITIAL (test element) -->
-  <div id="popup-overlay" class="popup-overlay" hidden>
+  <div id="credential_picker_container" class="popup-overlay" hidden>
     <div class="popup-box newsletter-popup ad-interstitial" role="dialog" aria-label="Popup" data-i18n-aria-label="aria_popup">
       <span class="ad-label" data-i18n="popup_label">Popup / Interstitial (test box)</span>
       <p><strong data-i18n="popup_title">Wait! Special offer (fake popup)</strong></p>
@@ -216,7 +225,7 @@
   </div>
 
   <!-- GRANULAR COOKIE PREFERENCES (test element) -->
-  <div id="prefs-overlay" class="popup-overlay cookie-prefs-overlay" hidden>
+  <div id="onetrust-consent-sdk" class="popup-overlay cookie-prefs-overlay" hidden>
     <div class="prefs-box cookie-preferences" role="dialog" aria-label="Cookie preferences" data-i18n-aria-label="aria_prefs" data-test="cookie-prefs">
       <span class="tracker-label" data-i18n="pref_label">Granular consent (test box)</span>
       <p><strong data-i18n="pref_title">Cookie preferences (test dialog)</strong></p>

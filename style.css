@@ -281,6 +281,31 @@ article {
   overflow-wrap: break-word;
 }
 
+/* Network beacons for URL-based block rules */
+
+.beacon-box {
+  background: #f8fafc;
+  border: 2px solid #475569;
+  padding: 16px;
+  margin: 16px 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+.beacon-label {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  padding: 2px 8px;
+  margin-bottom: 8px;
+  color: #334155;
+}
+
+.beacon-box ul { margin: 8px 0 0; padding-left: 20px; }
+.beacon-box li { margin: 4px 0; }
+
 .newsletter-box {
   background: #fef9c3;
   border: 2px solid #a16207;
