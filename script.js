@@ -204,12 +204,39 @@ function updateTrackerLog(msg) {
   }
 }
 
+function getStoredLang() {
+  try {
+    return localStorage.getItem("daily-test-lang");
+  } catch (e) {
+    return null;
+  }
+}
+
+function storeLang(lang) {
+  try {
+    localStorage.setItem("daily-test-lang", lang);
+  } catch (e) {
+    // Private mode or file:// restrictions: the language just won't persist.
+  }
+}
+
+function detectLang() {
+  var stored = getStoredLang();
+  if (stored === "en" || stored === "es") {
+    return stored;
+  }
+  var nav = (navigator.language || "en").toLowerCase();
+  return nav.indexOf("es") === 0 ? "es" : "en";
+}
+
 document.getElementById("lang-en").addEventListener("click", function () {
   setLang("en");
+  storeLang("en");
 });
 
 document.getElementById("lang-es").addEventListener("click", function () {
   setLang("es");
+  storeLang("es");
 });
 
 // Cookie banner.
@@ -263,4 +290,5 @@ setInterval(function () {
   updateTrackerLog(translations[currentLang].log_heartbeat + location.pathname + translations[currentLang].log_fake);
 }, 10000);
 
+setLang(detectLang());
 updateTrackerLog(translations[currentLang].log_pageview);
