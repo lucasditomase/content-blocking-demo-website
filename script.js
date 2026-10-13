@@ -257,6 +257,7 @@ function setLang(lang) {
   document.getElementById("lang-es").classList.toggle("is-active", lang === "es");
   vidRender();
   renderArticle();
+  stackSticky();
   updateTrackerLog("lang: " + lang);
 }
 
@@ -312,16 +313,19 @@ var cookieBanner = document.getElementById("cookie-consent-banner");
 
 document.getElementById("btn-accept-cookies").addEventListener("click", function () {
   cookieBanner.hidden = true;
+  stackSticky();
   updateTrackerLog(translations[currentLang].log_accepted);
 });
 
 document.getElementById("btn-reject-cookies").addEventListener("click", function () {
   cookieBanner.hidden = true;
+  stackSticky();
   updateTrackerLog(translations[currentLang].log_rejected);
 });
 
 document.getElementById("btn-show-cookie").addEventListener("click", function () {
   cookieBanner.hidden = false;
+  stackSticky();
 });
 
 // Granular cookie preferences dialog.
@@ -388,7 +392,20 @@ document.getElementById("btn-close-sticky").addEventListener("click", function (
 
 document.getElementById("btn-show-sticky").addEventListener("click", function () {
   sticky.style.display = "block";
+  stackSticky();
 });
+
+// Keep the sticky ad glued to the top of the cookie banner while both are
+// visible. A fixed CSS offset can't do this: the banner height changes with
+// language and viewport width, leaving a gap or an overlap.
+function stackSticky() {
+  var banner = document.getElementById("cookie-consent-banner");
+  var bar = document.getElementById("ad-sticky-bottom");
+  bar.style.bottom = banner.hidden ? "0" : banner.offsetHeight + "px";
+}
+
+window.addEventListener("resize", stackSticky);
+window.addEventListener("load", stackSticky);
 
 // Fake video player with preroll / midroll / overlay banner ads.
 var VID_DURATION = 30;

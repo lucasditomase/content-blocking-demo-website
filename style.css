@@ -330,8 +330,9 @@ article {
 .cookie-banner p { margin: 4px 0 0; color: #d1d5db; }
 .cookie-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
-/* When both sticky ad and cookie banner are visible, stack them. */
-body:has(.cookie-banner:not([hidden])) .ad-sticky { bottom: 86px; }
+/* Sticky/banner stacking is handled in JS (stackSticky): the cookie banner
+   height changes with language and viewport width, so no fixed CSS offset
+   can keep them glued together. */
 
 /* Popup */
 
