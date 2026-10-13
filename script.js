@@ -7,7 +7,7 @@ var translations = {
     ad_leaderboard_title: "Leaderboard Ad — 728x90 (test box)",
     ad_leaderboard_desc: "This is a fake display ad. A content blocker should hide or collapse this box.",
     test_note_title: "What is this page?",
-    test_note_desc: "A plain HTML/CSS/JS news mockup to test Safari content blockers. Colored boxes below simulate ads, cookie banners, popups, social embeds and trackers.",
+    test_note_desc: "A plain HTML/CSS/JS news mockup to test Safari content blockers. Colored boxes below simulate ads, cookie banners, popups, social embeds, video ads and trackers.",
     btn_show_cookie: "Show cookie banner",
     btn_show_popup: "Show popup",
     btn_show_sticky: "Show sticky ad",
@@ -99,7 +99,22 @@ var translations = {
     pref_reject_all: "Reject all",
     pref_save: "Save choices",
     log_prefs_saved: "cookie choices saved (fake)",
-    aria_prefs: "Cookie preferences"
+    aria_prefs: "Cookie preferences",
+    video_label: "Video player (test box)",
+    video_title: "Featured video — fake player",
+    video_desc: "Simulates preroll, midroll and overlay banner ads.",
+    video_content: "Main video content (fake)",
+    video_preroll: "Preroll Ad (test)",
+    video_midroll: "Midroll Ad (test)",
+    video_overlay: "Overlay banner (test)",
+    video_play: "Play",
+    video_pause: "Pause",
+    video_restart: "Restart video",
+    video_skip: "Skip ad",
+    video_skip_in: "Skip in",
+    video_ad_ends: "Ad ends in",
+    log_preroll: "preroll shown (fake)",
+    log_midroll: "midroll shown (fake)"
   },
   es: {
     masthead_kicker: "Sitio de noticias de prueba para bloqueadores de contenido en Safari",
@@ -107,7 +122,7 @@ var translations = {
     ad_leaderboard_title: "Anuncio superior — 728x90 (caja de prueba)",
     ad_leaderboard_desc: "Este es un anuncio falso. Un bloqueador de contenido debería ocultar o colapsar esta caja.",
     test_note_title: "¿Qué es esta página?",
-    test_note_desc: "Una maqueta sencilla de noticias en HTML/CSS/JS para probar bloqueadores de contenido en Safari. Las cajas de colores simulan anuncios, banners de cookies, popups, embeds sociales y rastreadores.",
+    test_note_desc: "Una maqueta sencilla de noticias en HTML/CSS/JS para probar bloqueadores de contenido en Safari. Las cajas de colores simulan anuncios, banners de cookies, popups, embeds sociales, anuncios de video y rastreadores.",
     btn_show_cookie: "Mostrar banner de cookies",
     btn_show_popup: "Mostrar popup",
     btn_show_sticky: "Mostrar anuncio fijo",
@@ -199,7 +214,22 @@ var translations = {
     pref_reject_all: "Rechazar todas",
     pref_save: "Guardar selección",
     log_prefs_saved: "selección de cookies guardada (falso)",
-    aria_prefs: "Preferencias de cookies"
+    aria_prefs: "Preferencias de cookies",
+    video_label: "Reproductor de video (caja de prueba)",
+    video_title: "Video destacado — reproductor falso",
+    video_desc: "Simula anuncios preroll, midroll y banners superpuestos.",
+    video_content: "Contenido principal (falso)",
+    video_preroll: "Anuncio preroll (prueba)",
+    video_midroll: "Anuncio midroll (prueba)",
+    video_overlay: "Banner superpuesto (prueba)",
+    video_play: "Reproducir",
+    video_pause: "Pausar",
+    video_restart: "Reiniciar video",
+    video_skip: "Omitir anuncio",
+    video_skip_in: "Omitir en",
+    video_ad_ends: "Termina en",
+    log_preroll: "preroll mostrado (falso)",
+    log_midroll: "midroll mostrado (falso)"
   }
 };
 
@@ -225,6 +255,7 @@ function setLang(lang) {
   }
   document.getElementById("lang-en").classList.toggle("is-active", lang === "en");
   document.getElementById("lang-es").classList.toggle("is-active", lang === "es");
+  vidRender();
   updateTrackerLog("lang: " + lang);
 }
 
@@ -357,6 +388,145 @@ document.getElementById("btn-close-sticky").addEventListener("click", function (
 document.getElementById("btn-show-sticky").addEventListener("click", function () {
   sticky.style.display = "block";
 });
+
+// Fake video player with preroll / midroll / overlay banner ads.
+var VID_DURATION = 30;
+var VID_AD_LEN = 5;
+var vidTime = 0;
+var vidPlaying = false;
+var vidPrerollDone = false;
+var vidMidrollDone = false;
+var vidOverlayDone = false;
+var vidAd = null;
+var vidAdLeft = 0;
+
+var vidPlayBtn = document.getElementById("btn-play");
+var vidRestartBtn = document.getElementById("btn-restart");
+var vidFill = document.getElementById("video-progress-fill");
+var vidBar = document.getElementById("video-progress");
+var vidTimeEl = document.getElementById("video-time");
+var vidPrerollEl = document.getElementById("video-preroll");
+var vidMidrollEl = document.getElementById("video-midroll");
+var vidOverlayEl = document.getElementById("video-overlay");
+var vidSkipBtn = document.getElementById("btn-skip-preroll");
+var vidMidCount = document.getElementById("midroll-count");
+
+function fmtTime(s) {
+  s = Math.max(0, Math.floor(s));
+  return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2);
+}
+
+function vidRender() {
+  vidFill.style.width = (vidTime / VID_DURATION * 100) + "%";
+  vidTimeEl.textContent = fmtTime(vidTime) + " / " + fmtTime(VID_DURATION);
+  vidPlayBtn.textContent = translations[currentLang][vidPlaying ? "video_pause" : "video_play"];
+}
+
+function vidRenderAd() {
+  var left = Math.max(0, Math.ceil(vidAdLeft));
+  if (vidAd === "preroll") {
+    if (vidAdLeft <= VID_AD_LEN - 3) {
+      vidSkipBtn.disabled = false;
+      vidSkipBtn.textContent = translations[currentLang].video_skip;
+    } else {
+      vidSkipBtn.disabled = true;
+      vidSkipBtn.textContent = translations[currentLang].video_skip_in + " " + left;
+    }
+  } else if (vidAd === "midroll") {
+    vidMidCount.textContent = translations[currentLang].video_ad_ends + " " + left + "s";
+  }
+}
+
+function vidStartAd(kind) {
+  vidAd = kind;
+  vidAdLeft = VID_AD_LEN;
+  if (kind === "preroll") {
+    vidPrerollEl.hidden = false;
+    updateTrackerLog(translations[currentLang].log_preroll);
+  } else {
+    vidMidrollEl.hidden = false;
+    updateTrackerLog(translations[currentLang].log_midroll);
+  }
+  vidRenderAd();
+}
+
+function vidEndAd() {
+  vidPrerollEl.hidden = true;
+  vidMidrollEl.hidden = true;
+  if (vidAd === "preroll") vidPrerollDone = true;
+  if (vidAd === "midroll") vidMidrollDone = true;
+  vidAd = null;
+  vidRender();
+}
+
+vidPlayBtn.addEventListener("click", function () {
+  if (vidPlaying) {
+    vidPlaying = false;
+  } else if (!vidPrerollDone && !vidAd) {
+    vidPlaying = true;
+    vidStartAd("preroll");
+  } else {
+    vidPlaying = true;
+  }
+  vidRender();
+});
+
+vidSkipBtn.addEventListener("click", function () {
+  if (vidAd === "preroll" && vidAdLeft <= VID_AD_LEN - 3) vidEndAd();
+});
+
+document.getElementById("btn-close-overlay").addEventListener("click", function () {
+  vidOverlayEl.hidden = true;
+});
+
+vidRestartBtn.addEventListener("click", function () {
+  vidTime = 0;
+  vidPlaying = false;
+  vidPrerollDone = false;
+  vidMidrollDone = false;
+  vidOverlayDone = false;
+  vidAd = null;
+  vidPrerollEl.hidden = true;
+  vidMidrollEl.hidden = true;
+  vidOverlayEl.hidden = true;
+  vidRender();
+});
+
+vidBar.addEventListener("click", function (e) {
+  var rect = vidBar.getBoundingClientRect();
+  var ratio = (e.clientX - rect.left) / rect.width;
+  vidTime = Math.min(VID_DURATION, Math.max(0, ratio * VID_DURATION));
+  vidRender();
+});
+
+setInterval(function () {
+  if (!vidPlaying) return;
+  if (vidAd) {
+    vidAdLeft -= 0.5;
+    if (vidAdLeft <= 0) {
+      vidEndAd();
+    } else {
+      vidRenderAd();
+    }
+    return;
+  }
+  vidTime += 0.5;
+  if (!vidMidrollDone && vidTime >= VID_DURATION / 2) {
+    vidStartAd("midroll");
+    return;
+  }
+  if (vidTime >= VID_DURATION) {
+    vidTime = VID_DURATION;
+    vidPlaying = false;
+  }
+  if (!vidOverlayDone && vidTime >= 5) {
+    vidOverlayDone = true;
+    vidOverlayEl.hidden = false;
+  }
+  vidRender();
+}, 500);
+
+vidRender();
 
 // Fake tracker heartbeat, so blocking its JS is observable.
 setInterval(function () {

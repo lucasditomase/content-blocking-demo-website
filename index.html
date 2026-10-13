@@ -91,6 +91,34 @@
           </div>
         </div>
 
+        <!-- VIDEO PLAYER WITH ADS (test element) -->
+        <div id="video-player" class="video-player" data-test="video-ads">
+          <span class="video-label" data-i18n="video_label">Video player (test box)</span>
+          <p><strong data-i18n="video_title">Featured video — fake player</strong></p>
+          <p data-i18n="video_desc">Simulates preroll, midroll and overlay banner ads.</p>
+          <div class="video-screen">
+            <div class="video-content"><span data-i18n="video_content">Main video content (fake)</span></div>
+            <div id="video-preroll" class="video-ad vast-ad vast-preroll" hidden>
+              <span class="ad-label" data-i18n="video_preroll">Preroll Ad (test)</span>
+              <button id="btn-skip-preroll" type="button" data-i18n="video_skip" disabled>Skip ad</button>
+            </div>
+            <div id="video-midroll" class="video-ad vast-ad vast-midroll" hidden>
+              <span class="ad-label" data-i18n="video_midroll">Midroll Ad (test)</span>
+              <span id="midroll-count"></span>
+            </div>
+            <div id="video-overlay" class="video-banner" hidden>
+              <span data-i18n="video_overlay">Overlay banner (test)</span>
+              <button id="btn-close-overlay" type="button" aria-label="Close" data-i18n-aria-label="aria_close">✕</button>
+            </div>
+          </div>
+          <div class="video-controls">
+            <button id="btn-play" type="button" data-i18n="video_play">Play</button>
+            <button id="btn-restart" type="button" data-i18n="video_restart">Restart video</button>
+            <div class="video-progress" id="video-progress"><div class="video-progress-fill" id="video-progress-fill"></div></div>
+            <span id="video-time">0:00 / 0:30</span>
+          </div>
+        </div>
+
         <p data-i18n="p7">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.</p>
 
         <!-- SPONSORED / TABOOLA (test element) -->
