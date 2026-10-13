@@ -229,7 +229,7 @@ article {
   right: 0;
   z-index: 90;
   margin: 0;
-  background: #ffd166;
+  background: #fff3b0;
   border-top: 2px dashed #7a5b00;
   padding: 10px;
   display: flex;
@@ -559,7 +559,7 @@ article {
   left: 0;
   right: 0;
   bottom: 0;
-  background: #ffd166;
+  background: #fff3b0;
   color: #222;
   padding: 6px 10px;
   display: flex;
