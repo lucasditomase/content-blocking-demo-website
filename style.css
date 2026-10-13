@@ -195,7 +195,14 @@ article {
   background: #ffd166;
   border-top: 2px dashed #7a5b00;
   padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
+
+.ad-sticky .ad-label { margin-bottom: 0; }
 
 .ad-cta {
   background: #111;

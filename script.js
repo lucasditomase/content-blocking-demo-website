@@ -522,7 +522,13 @@ document.getElementById("btn-show-sticky").addEventListener("click", function ()
 function stackSticky() {
   var banner = document.getElementById("cookies-overlay");
   var bar = document.getElementById("ad-sticky-bottom");
-  bar.style.bottom = banner.hidden ? "0" : banner.offsetHeight + "px";
+  if (banner.hidden) {
+    bar.style.bottom = "0";
+    // Keep the matched height so the bar doesn't jump when the banner hides.
+  } else {
+    bar.style.bottom = banner.offsetHeight + "px";
+    bar.style.height = banner.offsetHeight + "px";
+  }
 }
 
 window.addEventListener("resize", stackSticky);
