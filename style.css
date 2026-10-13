@@ -196,7 +196,7 @@ article {
 .ad-rail {
   display: none;
   position: fixed;
-  top: 50%;
+  top: 55%;
   width: 180px;
   max-height: 80vh;
   overflow: auto;
@@ -210,6 +210,16 @@ article {
 
 @media (min-width: 1400px) {
   .ad-rail { display: block; }
+}
+
+@media (min-width: 1400px) and (min-height: 800px) {
+  .ad-rail {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+  }
 }
 
 .ad-sticky {
