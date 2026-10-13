@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Daily Test — Content Blocker Demo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="masthead">
+      <div>
+        <p class="masthead-kicker" data-i18n="masthead_kicker">Test news site for Safari content blockers</p>
+        <h1 class="masthead-title">The Daily Test</h1>
+      </div>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button id="lang-en" type="button" class="lang-btn is-active">EN</button>
+        <button id="lang-es" type="button" class="lang-btn">ES</button>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="#">Home</a>
+      <a href="#">World</a>
+      <a href="#">Tech</a>
+      <a href="#">Sports</a>
+      <a href="#">Culture</a>
+    </nav>
+  </header>
+
+  <!-- TOP LEADERBOARD AD (test element) -->
+  <div id="ad-leaderboard-top" class="ad-box ad-leaderboard adsbygoogle" data-test="ad-leaderboard">
+    <span class="ad-label" data-i18n="ad_label">Advertisement</span>
+    <p><strong data-i18n="ad_leaderboard_title">Leaderboard Ad — 728x90 (test box)</strong></p>
+    <p data-i18n="ad_leaderboard_desc">This is a fake display ad. A content blocker should hide or collapse this box.</p>
+  </div>
+
+  <div class="page">
+    <main class="layout">
+
+      <article>
+        <section class="test-note">
+          <h2 data-i18n="test_note_title">What is this page?</h2>
+          <p data-i18n="test_note_desc">A plain HTML/CSS/JS news mockup to test Safari content blockers. Colored boxes below simulate ads, cookie banners, popups, social embeds and trackers.</p>
+          <div class="test-controls">
+            <button id="btn-show-cookie" type="button" data-i18n="btn_show_cookie">Show cookie banner</button>
+            <button id="btn-show-popup" type="button" data-i18n="btn_show_popup">Show popup</button>
+            <button id="btn-show-sticky" type="button" data-i18n="btn_show_sticky">Show sticky ad</button>
+          </div>
+        </section>
+
+        <h1 data-i18n="article_title">Local Developer Builds Tiny Website to Test Content Blockers</h1>
+        <p class="byline" data-i18n="article_byline">By Jane Reporter — October 13, 2026 — 4 min read</p>
+
+        <div class="hero-placeholder" aria-hidden="true">
+          <span data-i18n="hero_label">Hero image (placeholder)</span>
+        </div>
+
+        <p data-i18n="p1">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+        <p data-i18n="p2">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+        <h2 data-i18n="h2_1">Why blockers matter</h2>
+        <p data-i18n="p3">Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
+
+        <!-- IN-ARTICLE AD (test element) -->
+        <div id="ad-inarticle" class="ad-box ad-inarticle adsbygoogle" data-test="ad-inarticle">
+          <span class="ad-label" data-i18n="ad_label">Advertisement</span>
+          <p><strong data-i18n="ad_inarticle_title">In-Article Ad (test box)</strong></p>
+          <p data-i18n="ad_inarticle_desc">Fake ad placed between paragraphs, like AdSense in-article ads.</p>
+          <br>
+          <button type="button" class="ad-cta" data-i18n="ad_cta">Buy now</button>
+        </div>
+
+        <p data-i18n="p4">Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit. Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam.</p>
+
+        <h2 data-i18n="h2_2">A second section with more text</h2>
+        <p data-i18n="p5">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt. Ut labore et dolore magna aliqua — quis ipsum suspendisse ultrices gravida.</p>
+        <div><br></div>
+        <p data-i18n="p6">Risus commodo viverra maecenas accumsan lacus vel facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
+
+        <!-- SOCIAL / TRACKER EMBED (test element) -->
+        <div id="social-embed" class="social-box social-embed" data-test="social-embed">
+          <span class="social-label" data-i18n="social_label">Social embed (test box)</span>
+          <p><strong data-i18n="social_title">Embedded post — simulates X / Facebook / Instagram widget</strong></p>
+          <p data-i18n="social_desc">Content blockers often block third-party social widgets and their trackers.</p>
+          <div class="share-row">
+            <button type="button">Share on X</button>
+            <button type="button">Share on Facebook</button>
+            <button type="button">Copy link</button>
+          </div>
+        </div>
+
+        <p data-i18n="p7">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.</p>
+
+        <!-- SPONSORED / TABOOLA (test element) -->
+        <div id="sponsored-grid" class="sponsored-box sponsored-content taboola" data-test="sponsored">
+          <span class="sponsored-label" data-i18n="sponsored_label">Sponsored content (test box)</span>
+          <p><strong data-i18n="sponsored_title">You may also like</strong></p>
+          <div class="sponsored-grid">
+            <div class="sponsored-item">Sponsored 1</div>
+            <div class="sponsored-item">Sponsored 2</div>
+            <div class="sponsored-item">Sponsored 3</div>
+          </div>
+          <p class="sponsored-note" data-i18n="sponsored_desc">Simulates Taboola / Outbrain recommendation widgets.</p>
+        </div>
+
+        <h2 data-i18n="h2_3">Comments</h2>
+
+        <!-- COMMENTS / DISQUS (test element) -->
+        <div id="comments-box" class="comments-box disqus-embed" data-test="comments">
+          <span class="comments-label" data-i18n="comments_label">Comments widget (test box)</span>
+          <p><strong data-i18n="comments_title">3 comments — simulates Disqus</strong></p>
+          <p data-i18n="comments_desc">Third-party comment systems usually load tracking scripts.</p>
+          <div class="comment"><strong>Ana:</strong> Lorem ipsum dolor sit amet!</div>
+          <div class="comment"><strong>Bob:</strong> Consectetur adipiscing elit.</div>
+        </div>
+
+        <!-- TRACKER PIXEL (test element) -->
+        <div id="tracker-box" class="tracker-box" data-test="tracker">
+          <span class="tracker-label" data-i18n="tracker_label">Tracker (test box)</span>
+          <p data-i18n="tracker_desc">Simulates an analytics pixel / fingerprinting script. Check the log:</p>
+          <code id="tracker-log">tracker: waiting…</code>
+          <img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="1" height="1" alt="">
+        </div>
+      </article>
+
+      <aside class="sidebar">
+        <div id="ad-sidebar" class="ad-box ad-skyscraper adsbygoogle" data-test="ad-sidebar">
+          <span class="ad-label" data-i18n="ad_label">Advertisement</span>
+          <p><strong data-i18n="ad_sidebar_title">Sidebar Ad — 300x600 (test box)</strong></p>
+          <p data-i18n="ad_sidebar_desc">Fake skyscraper ad, typical sidebar inventory.</p>
+        </div>
+
+        <div id="newsletter-box" class="newsletter-box newsletter-signup" data-test="newsletter">
+          <span class="newsletter-label" data-i18n="newsletter_label">Newsletter (test box)</span>
+          <p><strong data-i18n="newsletter_title">Subscribe to our newsletter</strong></p>
+          <p data-i18n="newsletter_desc">Simulates an email capture form / paywall prompt.</p>
+          <input type="email" placeholder="you@example.com" aria-label="email">
+          <br><br>
+          <button type="button" data-i18n="newsletter_btn">Subscribe</button>
+        </div>
+
+        <div class="most-read">
+          <h3 data-i18n="most_read">Most read</h3>
+          <ul>
+            <li><a href="#" data-i18n="mr1">Lorem ipsum dolor sit amet</a></li>
+            <li><a href="#" data-i18n="mr2">Consectetur adipiscing elit</a></li>
+            <li><a href="#" data-i18n="mr3">Sed do eiusmod tempor</a></li>
+          </ul>
+        </div>
+      </aside>
+
+    </main>
+
+    <footer class="site-footer">
+      <p data-i18n="footer">The Daily Test — plain demo page for content-blocker testing. No real ads or tracking.</p>
+    </footer>
+  </div>
+
+  <!-- COOKIE CONSENT (test element) -->
+  <div id="cookie-consent-banner" class="cookie-banner" role="dialog" aria-label="Cookie consent">
+    <div>
+      <strong data-i18n="cookie_title">We use cookies (test banner)</strong>
+      <p data-i18n="cookie_desc">This is a fake cookie-consent notice. Real ones ask permission for analytics and advertising cookies. A blocker may hide this automatically.</p>
+    </div>
+    <div class="cookie-actions">
+      <button id="btn-accept-cookies" type="button" data-i18n="cookie_accept">Accept</button>
+      <button id="btn-reject-cookies" type="button" data-i18n="cookie_reject">Reject</button>
+    </div>
+  </div>
+
+  <!-- STICKY BOTTOM AD (test element) -->
+  <div id="ad-sticky-bottom" class="ad-box ad-sticky adsbygoogle" data-test="ad-sticky">
+    <span class="ad-label" data-i18n="ad_label">Advertisement</span>
+    <span data-i18n="ad_sticky_desc">Sticky bottom ad (test box)</span>
+    <button id="btn-close-sticky" type="button" aria-label="Close">✕</button>
+  </div>
+
+  <!-- POPUP / INTERSTITIAL (test element) -->
+  <div id="popup-overlay" class="popup-overlay" hidden>
+    <div class="popup-box newsletter-popup ad-interstitial" role="dialog" aria-label="Popup">
+      <span class="ad-label" data-i18n="popup_label">Popup / Interstitial (test box)</span>
+      <p><strong data-i18n="popup_title">Wait! Special offer (fake popup)</strong></p>
+      <p data-i18n="popup_desc">Simulates a newsletter interstitial or full-screen ad shown after 3 seconds.</p>
+      <button id="btn-close-popup" type="button" data-i18n="popup_close">Close</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
