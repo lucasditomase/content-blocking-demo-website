@@ -530,7 +530,8 @@ window.addEventListener("load", stackSticky);
 
 // Fake video player with preroll / midroll / overlay banner ads.
 var VID_DURATION = 30;
-var VID_AD_LEN = 5;
+var VID_AD_LEN = 10;
+var VID_UNSKIPPABLE = 5;
 var vidTime = 0;
 var vidPlaying = false;
 var vidPrerollDone = false;
@@ -549,6 +550,7 @@ var vidPrerollEl = document.getElementById("video-preroll");
 var vidMidrollEl = document.getElementById("video-midroll");
 var vidOverlayEl = document.getElementById("video-overlay");
 var vidSkipBtn = document.getElementById("btn-skip-preroll");
+var vidPreCount = document.getElementById("preroll-count");
 var vidMidCount = document.getElementById("midroll-count");
 
 function fmtTime(s) {
@@ -565,12 +567,15 @@ function vidRender() {
 function vidRenderAd() {
   var left = Math.max(0, Math.ceil(vidAdLeft));
   if (vidAd === "preroll") {
-    if (vidAdLeft <= VID_AD_LEN - 3) {
+    vidPreCount.textContent = translations[currentLang].video_ad_ends + " " + left + "s";
+    // Skip counts its own unskippable portion (3, 2, 1), not the ad total.
+    var skipLeft = Math.ceil(vidAdLeft - (VID_AD_LEN - VID_UNSKIPPABLE));
+    if (skipLeft <= 0) {
       vidSkipBtn.disabled = false;
       vidSkipBtn.textContent = translations[currentLang].video_skip;
     } else {
       vidSkipBtn.disabled = true;
-      vidSkipBtn.textContent = translations[currentLang].video_skip_in + " " + left;
+      vidSkipBtn.textContent = translations[currentLang].video_skip_in + " " + skipLeft;
     }
   } else if (vidAd === "midroll") {
     vidMidCount.textContent = translations[currentLang].video_ad_ends + " " + left + "s";
@@ -651,7 +656,7 @@ vidPlayBtn.addEventListener("click", function () {
 });
 
 vidSkipBtn.addEventListener("click", function () {
-  if (vidAd === "preroll" && vidAdLeft <= VID_AD_LEN - 3) vidEndAd();
+  if (vidAd === "preroll" && vidAdLeft <= VID_AD_LEN - VID_UNSKIPPABLE) vidEndAd();
 });
 
 document.getElementById("btn-close-overlay").addEventListener("click", function () {
