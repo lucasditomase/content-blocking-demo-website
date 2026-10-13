@@ -152,7 +152,9 @@ var translations = {
     log_blocker_on: "ad blocker detected (fake)",
     log_blocker_off: "no ad blocker detected (fake)",
     log_paywall_sub: "paywall subscribed (fake)",
-    aria_paywall: "Paywall"
+    aria_paywall: "Paywall",
+    ad_rail_title: "Side Rail Ad — 160x600 (test box)",
+    ad_rail_desc: "Fixed side rail, only visible on wide screens."
   },
   es: {
     masthead_kicker: "Sitio de noticias de prueba para bloqueadores de contenido en Safari",
@@ -305,7 +307,9 @@ var translations = {
     log_blocker_on: "bloqueador de anuncios detectado (falso)",
     log_blocker_off: "sin bloqueador de anuncios detectado (falso)",
     log_paywall_sub: "suscripción al muro de pago (falso)",
-    aria_paywall: "Muro de pago"
+    aria_paywall: "Muro de pago",
+    ad_rail_title: "Anuncio lateral fijo — 160x600 (caja de prueba)",
+    ad_rail_desc: "Rail lateral fijo, solo visible en pantallas anchas."
   }
 };
 
@@ -983,6 +987,14 @@ document.getElementById("btn-paywall-subscribe").addEventListener("click", funct
 
 document.getElementById("btn-paywall-continue").addEventListener("click", function () {
   document.getElementById("paywall-overlay").hidden = true;
+});
+
+document.getElementById("btn-close-rail-left").addEventListener("click", function () {
+  document.getElementById("ad-rail-left").style.display = "none";
+});
+
+document.getElementById("btn-close-rail-right").addEventListener("click", function () {
+  document.getElementById("ad-rail-right").style.display = "none";
 });
 
 // Fake tracker heartbeat, so blocking its JS is observable.
