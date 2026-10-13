@@ -135,6 +135,7 @@ var translations = {
     video_net_ok: "Ad servers reachable — ads will play.",
     video_net_blocked: "Ad servers blocked — playing content without ads.",
     log_ads_skipped: "ads skipped, servers blocked (fake)",
+    log_ad_hidden: "ad hidden by cosmetic rule, skipped (fake)",
     blocker_label: "Ad blocker detection (test box)",
     blocker_title: "Ad blocker detection test",
     blocker_desc: "Loads a well-known advertising script as a probe. If an ad blocker stops it, a paywall notice appears like on real sites.",
@@ -287,6 +288,7 @@ var translations = {
     video_net_ok: "Servidores de anuncios accesibles — se mostrarán anuncios.",
     video_net_blocked: "Servidores de anuncios bloqueados — reproduciendo sin anuncios.",
     log_ads_skipped: "anuncios omitidos, servidores bloqueados (falso)",
+    log_ad_hidden: "anuncio oculto por regla cosmética, omitido (falso)",
     blocker_label: "Detección de bloqueadores de anuncios (caja de prueba)",
     blocker_title: "Prueba de detección de bloqueadores de anuncios",
     blocker_desc: "Carga un conocido script de publicidad como sonda. Si un bloqueador de anuncios lo frena, aparece un aviso de muro de pago como en sitios reales.",
@@ -536,6 +538,7 @@ var vidMidrollDone = false;
 var vidOverlayDone = false;
 var vidAd = null;
 var vidAdLeft = 0;
+var vidCheckTimer = null;
 
 var vidPlayBtn = document.getElementById("btn-play");
 var vidRestartBtn = document.getElementById("btn-restart");
@@ -575,28 +578,58 @@ function vidRenderAd() {
 }
 
 function vidStartAd(kind) {
+  var adEl = kind === "preroll" ? vidPrerollEl : vidMidrollEl;
+  function markDone() {
+    if (kind === "preroll") vidPrerollDone = true;
+    else vidMidrollDone = true;
+  }
   // Adaptive behavior: with the ad servers blocked, skip the ad break and
   // play content directly, like a real player with an unreachable ad server.
   if (adServersBlocked()) {
-    if (kind === "preroll") vidPrerollDone = true;
-    else vidMidrollDone = true;
+    markDone();
     updateTrackerLog(translations[currentLang].log_ads_skipped);
     vidRender();
     return;
   }
   vidAd = kind;
   vidAdLeft = VID_AD_LEN;
-  if (kind === "preroll") {
-    vidPrerollEl.hidden = false;
-    updateTrackerLog(translations[currentLang].log_preroll);
-  } else {
-    vidMidrollEl.hidden = false;
-    updateTrackerLog(translations[currentLang].log_midroll);
+  adEl.hidden = false;
+  // Cosmetic verdict: if a blocker hides the ad element itself, there is no
+  // visible break — skip its timer instead of playing dead air.
+  if (adHidden(adEl)) {
+    vidAd = null;
+    adEl.hidden = true;
+    markDone();
+    updateTrackerLog(translations[currentLang].log_ad_hidden);
+    vidRender();
+    return;
+  }
+  updateTrackerLog(translations[currentLang][kind === "preroll" ? "log_preroll" : "log_midroll"]);
+  // Verdict still pending: show the break, but cut it the moment the
+  // beacons prove blocked (plus a short cap), so a blocked ad never plays
+  // in full just because we pressed Play early.
+  if (adBeaconsPending()) {
+    vidCheckTimer = setTimeout(function () {
+      if (vidAd && adServersBlocked()) {
+        vidEndAd();
+        updateTrackerLog(translations[currentLang].log_ads_skipped);
+      }
+    }, 2000);
   }
   vidRenderAd();
 }
 
+function adHidden(el) {
+  if (el.getBoundingClientRect().width === 0) return true;
+  if (window.getComputedStyle && getComputedStyle(el).display === "none") return true;
+  return false;
+}
+
 function vidEndAd() {
+  if (vidCheckTimer) {
+    clearTimeout(vidCheckTimer);
+    vidCheckTimer = null;
+  }
   vidPrerollEl.hidden = true;
   vidMidrollEl.hidden = true;
   if (vidAd === "preroll") vidPrerollDone = true;
@@ -626,6 +659,10 @@ document.getElementById("btn-close-overlay").addEventListener("click", function 
 });
 
 vidRestartBtn.addEventListener("click", function () {
+  if (vidCheckTimer) {
+    clearTimeout(vidCheckTimer);
+    vidCheckTimer = null;
+  }
   vidTime = 0;
   vidPlaying = false;
   vidPrerollDone = false;
@@ -782,7 +819,10 @@ document.getElementById("btn-open-window").addEventListener("click", function ()
 
 // Network beacons: real third-party requests that URL-based block rules
 // target. Statuses update here; confirm in Safari Web Inspector → Network.
-var AD_BEACON_NAMES = ["googlesyndication.com", "imasdk.googleapis.com"];
+// Only the video ad server gates video breaks. The page-level ad loader is
+// excluded on purpose: it doubles as the blocker-detection probe, so its
+// result must not decide video playback.
+var AD_BEACON_NAMES = ["imasdk.googleapis.com"];
 
 function adBeaconStates() {
   var states = [];
@@ -797,6 +837,10 @@ function adServersBlocked() {
   return states.length === AD_BEACON_NAMES.length && states.every(function (s) { return s === "blocked"; });
 }
 
+function adBeaconsPending() {
+  return adBeaconStates().some(function (s) { return s === "pending"; });
+}
+
 function updateVideoNet() {
   var el = document.getElementById("video-netstatus");
   if (!el) return;
@@ -808,6 +852,14 @@ function updateVideoNet() {
     el.textContent = t.video_net_wait;
   } else {
     el.textContent = t.video_net_ok;
+  }
+  // Re-evaluate a break already on screen: a blocked verdict landing
+  // mid-ad must cut it immediately, not after the countdown.
+  if (vidAd && adServersBlocked()) {
+    vidEndAd();
+    updateTrackerLog(translations[currentLang].log_ads_skipped);
+  } else if (!vidAd && adServersBlocked() && !vidOverlayEl.hidden) {
+    vidOverlayEl.hidden = true;
   }
 }
 var BEACONS = [
