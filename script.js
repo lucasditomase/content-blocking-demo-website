@@ -316,8 +316,10 @@ var translations = {
 var currentLang = "en";
 
 function setLang(lang) {
+  if (!translations[lang]) lang = "en";
   currentLang = lang;
   document.documentElement.lang = lang;
+  document.documentElement.dir = RTL_LANGS.indexOf(lang) !== -1 ? "rtl" : "ltr";
   document.title = translations[lang].page_title;
   var els = document.querySelectorAll("[data-i18n]");
   for (var i = 0; i < els.length; i++) {
@@ -374,12 +376,20 @@ function storeLang(lang) {
 
 function detectLang() {
   var stored = getStoredLang();
-  if (stored === "en" || stored === "es") {
+  if (stored && translations[stored]) {
     return stored;
   }
   var nav = (navigator.language || "en").toLowerCase();
-  return nav.indexOf("es") === 0 ? "es" : "en";
+  var supported = Object.keys(translations);
+  for (var i = 0; i < supported.length; i++) {
+    if (nav === supported[i] || nav.indexOf(supported[i] + "-") === 0) {
+      return supported[i];
+    }
+  }
+  return "en";
 }
+
+var RTL_LANGS = ["ar", "he", "fa", "ur"];
 
 document.getElementById("lang-select").addEventListener("change", function (e) {
   setLang(e.target.value);
