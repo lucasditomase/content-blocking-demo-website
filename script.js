@@ -59,6 +59,7 @@ var translations = {
     popup_desc: "Simulates a newsletter interstitial or full-screen ad shown after 3 seconds.",
     popup_close: "Close",
     page_title: "The Daily Test — Content Blocker Demo",
+    lang_label: "Language",
     nav_home: "Home",
     nav_world: "World",
     nav_tech: "Tech",
@@ -77,7 +78,6 @@ var translations = {
     log_popup: "popup shown after 3s (fake interstitial)",
     log_heartbeat: "heartbeat — page_url=",
     log_fake: " (fake)",
-    aria_lang: "Language",
     aria_email: "email",
     aria_cookie: "Cookie consent",
     aria_popup: "Popup",
@@ -214,6 +214,7 @@ var translations = {
     popup_desc: "Simula un intersticial de boletín o un anuncio de pantalla completa mostrado tras 3 segundos.",
     popup_close: "Cerrar",
     page_title: "The Daily Test — Demo de bloqueo de contenido",
+    lang_label: "Idioma",
     nav_home: "Inicio",
     nav_world: "Mundo",
     nav_tech: "Tecnología",
@@ -232,7 +233,6 @@ var translations = {
     log_popup: "popup mostrado tras 3 s (intersticial falso)",
     log_heartbeat: "latido — page_url=",
     log_fake: " (falso)",
-    aria_lang: "Idioma",
     aria_email: "correo electrónico",
     aria_cookie: "Consentimiento de cookies",
     aria_popup: "Ventana emergente",
@@ -333,8 +333,7 @@ function setLang(lang) {
       ariaEls[j].setAttribute("aria-label", translations[lang][ariaKey]);
     }
   }
-  document.getElementById("lang-en").classList.toggle("is-active", lang === "en");
-  document.getElementById("lang-es").classList.toggle("is-active", lang === "es");
+  document.getElementById("lang-select").value = lang;
   vidRender();
   renderArticle();
   renderBeacons();
@@ -382,14 +381,9 @@ function detectLang() {
   return nav.indexOf("es") === 0 ? "es" : "en";
 }
 
-document.getElementById("lang-en").addEventListener("click", function () {
-  setLang("en");
-  storeLang("en");
-});
-
-document.getElementById("lang-es").addEventListener("click", function () {
-  setLang("es");
-  storeLang("es");
+document.getElementById("lang-select").addEventListener("change", function (e) {
+  setLang(e.target.value);
+  storeLang(e.target.value);
 });
 
 // Cookie banner.

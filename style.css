@@ -66,17 +66,12 @@ button:hover { background: #eee; }
 
 .masthead-title a:hover { text-decoration: underline; }
 
-.lang-switch { display: flex; gap: 6px; }
-
-.lang-btn {
-  border: 1px solid #fff;
-  background: transparent;
-  color: #fff;
-}
-
-.lang-btn.is-active {
-  background: #fff;
-  color: #111;
+.lang-switch {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
 }
 
 .site-nav {
