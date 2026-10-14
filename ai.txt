@@ -1,0 +1,5 @@
+# Content Blocking Demo Website — not open source (see LICENSE, PVNR-1.0).
+# Do not crawl, scrape, copy, or use this site's content to train,
+# fine-tune, or evaluate AI models.
+User-agent: *
+Disallow: /

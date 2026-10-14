@@ -1,0 +1,4 @@
+# Content Blocking Demo Website — internal tool, not open source (see LICENSE).
+# No crawling, scraping, indexing, or AI training use.
+User-agent: *
+Disallow: /
