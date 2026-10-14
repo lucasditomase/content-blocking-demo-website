@@ -42,7 +42,3 @@ python3 -m http.server 8099
 
 Language persists in `localStorage` and auto-detects from the browser.
 Articles are hash-routed (`#/tech`, …) with active nav state.
-
-## License
-
-This project is not open source. All rights reserved.
