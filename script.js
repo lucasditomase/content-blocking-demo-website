@@ -654,6 +654,7 @@ function vidEndAd() {
 }
 
 vidPlayBtn.addEventListener("click", function () {
+  vidRestartBtn.disabled = false;
   if (vidPlaying) {
     vidPlaying = false;
   } else if (!vidPrerollDone && !vidAd) {
@@ -679,7 +680,6 @@ vidRestartBtn.addEventListener("click", function () {
     vidCheckTimer = null;
   }
   vidTime = 0;
-  vidPlaying = false;
   vidPrerollDone = false;
   vidMidrollDone = false;
   vidOverlayDone = false;
@@ -687,6 +687,9 @@ vidRestartBtn.addEventListener("click", function () {
   vidPrerollEl.hidden = true;
   vidMidrollEl.hidden = true;
   vidOverlayEl.hidden = true;
+  // Restart implies playback: run the preroll flow again like Play does.
+  vidPlaying = true;
+  vidStartAd("preroll");
   vidRender();
 });
 
