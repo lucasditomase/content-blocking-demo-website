@@ -524,7 +524,6 @@ article {
 
 .video-screen {
   position: relative;
-  min-height: 220px;
   aspect-ratio: 16 / 9;
   background: #333;
   margin: 8px 0;
